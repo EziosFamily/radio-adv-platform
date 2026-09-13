@@ -1,0 +1,43 @@
+{
+  GPU: {
+    use_gpu: True,
+    device_id: [0],
+  },
+
+  CONFIG: {
+      dataset_name: 'Rml2016_10a',
+      model_name: 'VTCNN2',
+      criterion_name: 'CrossEntropyLoss',
+      optimizer_name: 'Adam',
+      metrics: ['accuracy'],
+      adjust_lr: True,
+      load_model: False,
+      defender_name: 'FGSM_Adv_Trainer'
+  },
+
+  ARG: {
+      epoch: 1,
+      batch_size: 64,
+  },
+
+  VTCNN2: {
+      output_dim: 11,
+  },
+
+  Adam: {
+      lr: 0.00002,
+      weight_decay: 1.0e-3,
+  },
+
+  Rml2016_10a: {
+      dirname: "./data_loader/dataset/RML2016.10a",
+      prop: 0.5,
+      dataset_name: random_rml2016_subset_300,
+  },
+
+  FGSM_Adv_Trainer: {
+      clean_sigma: 0.5,
+      adv_sigma: 0.5,
+      alp_coef: 0.5
+  }
+}

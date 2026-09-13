@@ -1,0 +1,89 @@
+'''
+Author: your name
+Date: 2020-12-06 15:34:01
+LastEditTime: 2020-12-21 19:03:47
+LastEditors: your name
+Description: In User Settings Edit
+FilePath: /radioAdv/model_loader/based_lstm.py
+'''
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from model_loader.base_model import BaseModel
+
+class Based_LSTM(BaseModel):
+    def __init__(self, output_dim):
+        super(Based_LSTM, self).__init__()
+        # input(batch, 1, 2, 128)
+        # after shape(batch, 128, 2)
+        self.lstm1 = nn.Sequential(
+            nn.BatchNorm1d(128),
+            nn.LSTM(input_size= 2, hidden_size= 100, num_layers=3, batch_first= True)
+        )
+        self.relu1 = nn.ReLU()
+        # after lstm1(batch, 128, 100)
+        self.lstm2 = nn.Sequential(
+            nn.BatchNorm1d(128),
+            nn.LSTM(input_size= 100, hidden_size=50, num_layers=3, batch_first= True)
+        )
+        self.relu2 = nn.ReLU()
+        # afer lstm2(batch, 128, 50)
+        # after shape(batch, 128 * 50)
+        self.fc1 = nn.Sequential(
+            nn.Linear(in_features= 128 * 50, out_features= 64),
+            nn.ReLU()
+        )
+        self.fc2 = nn.Sequential(
+            nn.Linear(in_features= 64, out_features= output_dim)
+        )
+
+    def forward(self, x):
+        # cuDNN LSTM backward is blocked in eval(); keep BN/Dropout eval, only open RNNs.
+        if x.requires_grad:
+            for m in self.modules():
+                if isinstance(m, nn.RNNBase):
+                    m.train()
+        x = x.view(x.shape[0], 2, 128)
+        x = x.transpose(1,2)
+        x,_ = self.lstm1(x)
+        x = self.relu1(x)
+        # print('conv1', x.shape)
+        x,_ = self.lstm2(x)
+        x = self.relu2(x)
+        x = x.reshape(x.shape[0], -1)
+        # print('gru2', x.shape)
+        # x = self.dropout(x)
+        x = self.fc1(x)
+        x = self.fc2(x)
+        return x
+
+def _load_checkpoint_obj(filepath):
+    try:
+        return torch.load(filepath, map_location='cpu', weights_only=False)
+    except Exception:
+        import pickle
+        with open(filepath, 'rb') as f:
+            return pickle.load(f, encoding='latin1')
+
+
+def loadBased_LSTM(filepath):
+    """Load the 11-class RML2016 LSTM classifier."""
+    checkpoint = _load_checkpoint_obj(filepath)
+    if isinstance(checkpoint, dict) and 'state_dict' in checkpoint:
+        state = checkpoint['state_dict']
+    elif isinstance(checkpoint, dict):
+        state = checkpoint
+    else:
+        raise RuntimeError('Unsupported LSTM checkpoint format: {}'.format(type(checkpoint)))
+
+    model = Based_LSTM(output_dim=11)
+    missing, unexpected = model.load_state_dict(state, strict=False)
+    if missing or unexpected:
+        raise RuntimeError(
+            'LSTM weights do not match Based_LSTM (11-class). '
+            'missing={} unexpected={}. Train a classifier checkpoint first.'.format(
+                list(missing)[:4], list(unexpected)[:4]
+            )
+        )
+    return model

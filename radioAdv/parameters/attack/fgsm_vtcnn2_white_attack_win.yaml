@@ -1,0 +1,34 @@
+{
+  GPU: {
+    use_gpu: True,
+    device_id: [0],
+  },
+
+  CONFIG: {
+      dataset_name: 'Rml2016_10a',
+      model_name: 'VTCNN2',
+      criterion_name: 'CrossEntropyLoss',
+      metrics: ['accuracy'],
+      attack_name: 'FGSM',
+  },
+
+  Rml2016_10a: {
+      dirname: "./data_loader/dataset/RML2016.10a",
+      prop: 0.5,
+      dataset_name: random_rml2016_subset_300,
+  },
+
+  VTCNN2: {
+      filepath: './model/VTCNN2_Epoch190.pkl'
+  },
+
+  FGSM: {
+      eps: 1.0e-3,
+      is_target: False,
+      target: 9,
+  },
+
+  Switch_Method: {
+      method: 'White_Attack',
+  }
+}

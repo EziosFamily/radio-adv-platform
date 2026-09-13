@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=3 python attack.py --config parameters/attack/target_attack/fgsm_vtcnn_vs_vtcnn.yaml --vGPU 0

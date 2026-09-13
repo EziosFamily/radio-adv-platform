@@ -1,0 +1,10 @@
+# Install into d:\173\.venv (Python 3.11)
+# torch/torchvision: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
+numpy
+matplotlib
+pyyaml
+flask
+flask-cors
+tqdm
+pillow
+h5py

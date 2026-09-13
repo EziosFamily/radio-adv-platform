@@ -1,0 +1,1 @@
+python attack.py --config /mnt/home/lzh/project/radioAdv/parameters/attack/fgsm_vtcnn2_white_attack.yaml --vGPU 0

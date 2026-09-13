@@ -1,0 +1,62 @@
+# Python
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Node / Vue
+node_modules/
+dist/
+dist-ssr/
+.vs/
+.idea/
+*.local
+
+# Local editor / OS
+.cursor/
+.vscode/
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Secrets and machine-specific env
+.env
+.env.*
+
+# Videos and other large media
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.wmv
+*.pcm
+
+# Packaged binaries
+*.jar
+*.exe
+*.whl
+*.iso
+
+# Full RML dump and generated train/test splits
+**/RML2016.10a_dict.pkl
+**/*_train_data.p
+**/*_test_data.p
+**/*_augments.p
+**/train_data.p
+**/test_data.p
+
+# Duplicate / bulky data copies under the backend
+radioAdv/data_loader/dataset/
+
+# Model weights and training outputs
+radioAdv/model/*.pkl
+radioAdv/checkpoint/
+radioAdv/log/
+radioAdv/tmp_parameter/
+radioAdv/figure/
+
+# Frontend build cache
+173_vue/173_vue/.vite/
