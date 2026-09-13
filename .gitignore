@@ -51,8 +51,7 @@ Desktop.ini
 # Duplicate / bulky data copies under the backend
 radioAdv/data_loader/dataset/
 
-# Model weights and training outputs
-radioAdv/model/*.pkl
+# Training outputs (keep radioAdv/model/*.pkl for inference)
 radioAdv/checkpoint/
 radioAdv/log/
 radioAdv/tmp_parameter/
